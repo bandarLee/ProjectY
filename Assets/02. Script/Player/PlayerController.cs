@@ -8,7 +8,7 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     [Header("Movement Settings")]
-    public float MoveSpeed = 7f;
+    private float MoveSpeed; // PlayerStat에서 받아오기
     public float SprintSpeed = 15f;
     public float RotationSmoothTime = 0.12f;
     public float SpeedChangeRate = 10.0f;
@@ -51,12 +51,17 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
+        // PlayerStat의 속도를 가져와서 MoveSpeed에 적용
+        MoveSpeed = PlayerStat.Instance.GetSpeed();
         _jumpTimeoutDelta = JumpTimeout;
         _fallTimeoutDelta = FallTimeout;
     }
 
     private void Update()
     {
+        // PlayerStat의 속도 변경 사항을 반영
+        MoveSpeed = PlayerStat.Instance.GetSpeed();
+
         GroundedCheck();
         JumpAndGravity();
         Move();
@@ -67,7 +72,6 @@ public class PlayerController : MonoBehaviour
         Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z);
         Grounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers, QueryTriggerInteraction.Ignore);
 
-        // CharacterController.isGrounded 체크 추가
         if (!Grounded)
         {
             Grounded = _controller.isGrounded;
@@ -85,11 +89,10 @@ public class PlayerController : MonoBehaviour
                 _verticalVelocity = -2f;
             }
 
-            // 🔹 점프 타이머 체크 제거 → 즉시 점프 가능
             if (_input.jump)
             {
                 _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
-                _input.jump = false; // 점프 입력 리셋
+                _input.jump = false;
             }
         }
         else
@@ -97,13 +100,11 @@ public class PlayerController : MonoBehaviour
             _fallTimeoutDelta -= Time.deltaTime;
         }
 
-        // 중력 적용
         if (_verticalVelocity < 53f)
         {
             _verticalVelocity += Gravity * Time.deltaTime;
         }
     }
-
 
     private void Move()
     {

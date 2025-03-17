@@ -517,6 +517,7 @@ GameObject:
   - component: {fileID: 6991508522199864935}
   - component: {fileID: 6991508522199864939}
   - component: {fileID: 6991508522199864940}
+  - component: {fileID: 6991508522199864941}
   m_Layer: 0
   m_Name: PicoChan
   m_TagString: Untagged
@@ -555,7 +556,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20ba842627f175b4e8de1e1e4e7ecd01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MoveSpeed: 7
   SprintSpeed: 15
   RotationSmoothTime: 0.12
   SpeedChangeRate: 10
@@ -658,6 +658,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc2b6add9bc2e6246b3f121304dbfe29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &6991508522199864941
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6991508522199864934}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 227eaa566fcd2df4d8bdd0c93e0b2e0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MaxHealth: 100
+  AttackPower: 10
+  MagicPower: 15
+  BaseSpeed: 7
 --- !u!1001 &7679533617934211798
 PrefabInstance:
   m_ObjectHideFlags: 0
