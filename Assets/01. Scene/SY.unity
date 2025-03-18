@@ -495,11 +495,11 @@ Transform:
   m_GameObject: {fileID: 6991508522199864934}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.6750526, y: 0.012, z: -22.96}
+  m_LocalPosition: {x: 5.6750526, y: 0.13, z: -22.96}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 7679533617934211799}
+  - {fileID: 7861479956216216893}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6991508522199864934
@@ -641,7 +641,14 @@ Animator:
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
-  m_WarningMessage: 
+  m_WarningMessage: "\nBinding warning: Some generic clip(s) animate transforms that
+    are already bound by a Humanoid avatar. These transforms can only be changed
+    by Humanoid clips.\n\tTransform 'Hips'\n\tTransform 'RightHandIndex1'\n\tTransform
+    'LeftHandRing1'\n\tTransform 'LeftHandMiddle1'\n\tTransform 'LeftShoulder'\n\tTransform
+    'Head'\n\tTransform 'RightHandMiddle2'\n\tTransform 'LeftHandPinky1'\n\tTransform
+    'LeftHandRing2'\n\tTransform 'RightForeArm'\n\tand more ...\n\tFrom animation
+    clip 'mixamo.com'\n\tFrom animation clip 'mixamo.com'\n\tFrom animation clip
+    'mixamo.com'\n\tFrom animation clip 'mixamo.com'\n\tFrom animation clip 'mixamo.com'"
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -730,12 +737,28 @@ PrefabInstance:
       propertyPath: m_Name
       value: pico_chan_chr_pico_00
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 5866666021909216657, guid: 10038fdbf93c4dd43af9ce774d03a956, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 839cd9b21ad4c794cb363b40129d9727, type: 2}
+    - target: {fileID: 5866666021909216657, guid: 10038fdbf93c4dd43af9ce774d03a956, type: 3}
+      propertyPath: m_WarningMessage
+      value: "\nBinding warning: Some generic clip(s) animate transforms that are
+        already bound by a Humanoid avatar. These transforms can only be changed
+        by Humanoid clips.\n\tTransform 'Hips'\n\tTransform 'RightHandIndex1'\n\tTransform
+        'LeftHandRing1'\n\tTransform 'LeftHandMiddle1'\n\tTransform 'LeftShoulder'\n\tTransform
+        'Head'\n\tTransform 'RightHandMiddle2'\n\tTransform 'LeftHandPinky1'\n\tTransform
+        'LeftHandRing2'\n\tTransform 'RightForeArm'\n\tand more ...\n\tFrom animation
+        clip 'mixamo.com'\n\tFrom animation clip 'mixamo.com'\n\tFrom animation clip
+        'mixamo.com'\n\tFrom animation clip 'mixamo.com'\n\tFrom animation clip 'mixamo.com'"
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 5866666021909216657, guid: 10038fdbf93c4dd43af9ce774d03a956, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 10038fdbf93c4dd43af9ce774d03a956, type: 3}
---- !u!4 &7679533617934211799 stripped
+--- !u!4 &7861479956216216893 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 10038fdbf93c4dd43af9ce774d03a956, type: 3}
   m_PrefabInstance: {fileID: 7679533617934211798}
