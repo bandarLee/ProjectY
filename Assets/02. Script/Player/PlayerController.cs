@@ -39,6 +39,9 @@ public class PlayerController : MonoBehaviour
     private PlayerInputs _input;
     private Transform _mainCameraTransform;
 
+    // 점프 발생 이벤트 추가
+    public event System.Action OnJumpTriggered;
+
     private void Awake()
     {
         _controller = GetComponent<CharacterController>();
@@ -92,6 +95,9 @@ public class PlayerController : MonoBehaviour
             if (_input.jump)
             {
                 _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
+                // 이벤트를 통해 점프를 알림
+                OnJumpTriggered?.Invoke();
+                // 점프 입력 소비
                 _input.jump = false;
             }
         }
