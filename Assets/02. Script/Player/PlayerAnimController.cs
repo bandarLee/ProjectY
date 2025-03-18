@@ -15,7 +15,6 @@ public class PlayerAnimController : MonoBehaviour
         _controller = GetComponent<CharacterController>();
         _playerController = GetComponent<PlayerController>();
 
-        // PlayerController의 점프 이벤트 구독
         if (_playerController != null)
         {
             _playerController.OnJumpTriggered += HandleJump;
@@ -33,17 +32,27 @@ public class PlayerAnimController : MonoBehaviour
     private void Update()
     {
         float speed = new Vector3(_controller.velocity.x, 0, _controller.velocity.z).magnitude;
-        bool isWalking = speed > 0.1f && !_input.sprint;
-        bool isRunning = _input.sprint;
+        bool isWalking = speed > 0.1f && !_input.Sprint;
+        bool isRunning = _input.Sprint;
 
         _animator.SetBool("IsWalk", isWalking);
         _animator.SetBool("IsRun", isRunning);
 
-        // 점프 처리는 이벤트에서 처리하므로 여기서는 제거함.
+        // 공격 입력 처리 (이전 코드와 동일)
+        if (_input.Attack)
+        {
+            _animator.SetTrigger("IsSwordAttack");
+            _input.Attack = false;
+        }
     }
 
     private void HandleJump()
     {
         _animator.SetTrigger("IsJump");
+    }
+
+    public void OnAttackEnd()
+    {
+        _animator.SetBool("IsIdle", true);
     }
 }

@@ -92,13 +92,12 @@ public class PlayerController : MonoBehaviour
                 _verticalVelocity = -2f;
             }
 
-            if (_input.jump)
+            if (_input.Jump)
             {
                 _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
                 // 이벤트를 통해 점프를 알림
                 OnJumpTriggered?.Invoke();
-                // 점프 입력 소비
-                _input.jump = false;
+                _input.Jump = false;
             }
         }
         else
@@ -114,21 +113,21 @@ public class PlayerController : MonoBehaviour
 
     private void Move()
     {
-        float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
-        if (_input.move == Vector2.zero)
+        float targetSpeed = _input.Sprint ? SprintSpeed : MoveSpeed;
+        if (_input.Move == Vector2.zero)
         {
             targetSpeed = 0f;
         }
 
         float currentHorizontalSpeed = new Vector3(_controller.velocity.x, 0, _controller.velocity.z).magnitude;
-        float inputMagnitude = _input.analogMovement ? _input.move.magnitude : 1f;
+        float inputMagnitude = _input.analogMovement ? _input.Move.magnitude : 1f;
 
         _speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed * inputMagnitude, Time.deltaTime * SpeedChangeRate);
         _speed = Mathf.Round(_speed * 1000f) / 1000f;
 
-        if (_input.move != Vector2.zero)
+        if (_input.Move != Vector2.zero)
         {
-            Vector3 inputDirection = new Vector3(_input.move.x, 0f, _input.move.y).normalized;
+            Vector3 inputDirection = new Vector3(_input.Move.x, 0f, _input.Move.y).normalized;
             _targetRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg + _mainCameraTransform.eulerAngles.y;
             float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, _targetRotation, ref _rotationVelocity, RotationSmoothTime);
             transform.rotation = Quaternion.Euler(0f, rotation, 0f);

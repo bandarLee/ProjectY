@@ -8,10 +8,11 @@ namespace StarterAssets
     public class PlayerInputs : MonoBehaviour
     {
         [Header("Character Input Values")]
-        public Vector2 move;
-        public Vector2 look;
-        public bool jump;
-        public bool sprint;
+        public Vector2 Move;
+        public Vector2 Look;
+        public bool Jump;
+        public bool Sprint;
+        public bool Attack; // ← Attack 입력 변수 추가
 
         [Header("Movement Settings")]
         public bool analogMovement;
@@ -26,21 +27,31 @@ namespace StarterAssets
             Cursor.lockState = CursorLockMode.Locked;
         }
 
-        public void OnMove(InputValue value) => move = value.Get<Vector2>();
+        public void OnMove(InputValue value) => Move = value.Get<Vector2>();
 
         public void OnLook(InputValue value)
         {
             if (cursorInputForLook)
             {
-                look = value.Get<Vector2>();
+                Look = value.Get<Vector2>();
             }
         }
 
-        public void OnJump(InputValue value) => jump = value.isPressed;
+        public void OnJump(InputValue value) => Jump = value.isPressed;
+
+        // 공격
+        public void OnAttack(InputValue value)
+        {
+            if (value.isPressed)
+            {
+                Attack = true;
+                Debug.Log("공격!"); 
+            }
+        }
 
         private void Update()
         {
-            sprint = Keyboard.current.leftShiftKey.isPressed;
+            Sprint = Keyboard.current.leftShiftKey.isPressed;
         }
 #endif
     }
