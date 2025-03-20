@@ -12,7 +12,7 @@ namespace StarterAssets
         public Vector2 Look;
         public bool Jump;
         public bool Sprint;
-        public bool Attack; // ← Attack 입력 변수 추가
+        public bool Attack; 
 
         [Header("Movement Settings")]
         public bool analogMovement;

@@ -8,7 +8,7 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     [Header("Movement Settings")]
-    private float MoveSpeed; // PlayerStat에서 받아오기
+    private float MoveSpeed; 
     public float SprintSpeed = 15f;
     public float RotationSmoothTime = 0.12f;
     public float SpeedChangeRate = 10.0f;
@@ -29,13 +29,16 @@ public class PlayerController : MonoBehaviour
     [Tooltip("The follow target set in the Cinemachine Virtual Camera that the camera will follow")]
     public GameObject CinemachineCameraTarget;
     [Tooltip("How far in degrees can you move the camera up")]
-    public float TopClamp = 70.0f;
+    public float TopClamp = 500.0f;
     [Tooltip("How far in degrees can you move the camera down")]
     public float BottomClamp = -30.0f;
     [Tooltip("Additional degress to override the camera. Useful for fine tuning camera position when locked")]
     public float CameraAngleOverride = 0.0f;
     [Tooltip("For locking the camera position on all axis")]
     public bool LockCameraPosition = false;
+    [Tooltip("Vertical offset for the camera target (affects camera height)")]
+    public float CameraHeightOffset = 2.0f;
+
     // cinemachine
     private float _cinemachineTargetYaw;
     private float _cinemachineTargetPitch;
@@ -90,17 +93,24 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        // PlayerStat의 속도를 가져와서 MoveSpeed에 적용
         MoveSpeed = PlayerStat.Instance.GetSpeed();
         _jumpTimeoutDelta = JumpTimeout;
         _fallTimeoutDelta = FallTimeout;
+
+        // 초기 카메라 회전값 설정: 현재 카메라 대상의 회전값을 기준으로 함
+        _cinemachineTargetYaw = CinemachineCameraTarget.transform.eulerAngles.y;
+        _cinemachineTargetPitch = CinemachineCameraTarget.transform.eulerAngles.x;
+
+        // 초기 인풋 Look 값 초기화
+        _input.Look = Vector2.zero;
     }
     private void LateUpdate()
     {
-        // 플레이어 위치로 카메라 대상 위치 업데이트
-        CinemachineCameraTarget.transform.position = transform.position;
+        // 플레이어 위치에 높이 오프셋을 추가하여 카메라 대상 위치 업데이트
+        CinemachineCameraTarget.transform.position = transform.position + Vector3.up * CameraHeightOffset;
         CameraRotation();
     }
+
 
     private void Update()
     {
@@ -120,21 +130,21 @@ public class PlayerController : MonoBehaviour
 
     private void CameraRotation()
     {
-        // if there is an input and camera position is not fixed
+        // 인풋이 있고 카메라 고정이 해제된 경우에만 회전 적용
         if (_input.Look.sqrMagnitude >= _threshold && !LockCameraPosition)
         {
-            //Don't multiply mouse input by Time.deltaTime;
+            // 마우스 입력은 Time.deltaTime을 곱하지 않음
             float deltaTimeMultiplier = IsCurrentDeviceMouse ? 1.0f : Time.deltaTime;
 
             _cinemachineTargetYaw += _input.Look.x * deltaTimeMultiplier;
-            _cinemachineTargetPitch += _input.Look.y * deltaTimeMultiplier;
+            _cinemachineTargetPitch -= _input.Look.y * deltaTimeMultiplier; // 마우스 y입력을 반전시킴
         }
 
-        // clamp our rotations so our values are limited 360 degrees
+        // 회전 값 제한
         _cinemachineTargetYaw = ClampAngle(_cinemachineTargetYaw, float.MinValue, float.MaxValue);
         _cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, BottomClamp, TopClamp);
 
-        // Cinemachine will follow this target
+        // Cinemachine이 이 대상의 회전을 따르도록 설정
         CinemachineCameraTarget.transform.rotation = Quaternion.Euler(_cinemachineTargetPitch + CameraAngleOverride,
             _cinemachineTargetYaw, 0.0f);
     }
