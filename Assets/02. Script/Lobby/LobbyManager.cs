@@ -13,6 +13,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
     public Button CreateButton;
     public Button joinButton;
+    public GameObject BaseUI;
     public GameObject CreateUI;
     public GameObject JoinUI;
 
@@ -81,11 +82,15 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
     public void RoomCreateUI()
     {
-        CreateUI.SetActive(true);
+        SetActiveScreen(1);
     }
     public void RoomJoinUI()
     {
-        JoinUI.SetActive(true);
+        SetActiveScreen(2);
+    }
+    public void BackSpaceUI()
+    {
+        SetActiveScreen(0);
     }
     public void CreateRoom()
     {
@@ -121,6 +126,29 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
         PhotonNetwork.NickName = nickName;
         PhotonNetwork.JoinRoom(roomName);
+    }
+    public void SetActiveScreen(int ScreenNumber)
+    {
+        switch (ScreenNumber)
+        {
+            case 0: //로비로 뒤로가기
+                CreateUI.SetActive(false);
+                JoinUI.SetActive(false);
+                BaseUI.SetActive(true);
+                break;
+            case 1: // 방 생성
+                CreateUI.SetActive(true);
+                JoinUI.SetActive(false);
+                BaseUI.SetActive(false);
+                break;
+            case 2: // 방 참가
+                CreateUI.SetActive(false);
+                JoinUI.SetActive(true);
+                BaseUI.SetActive(false);
+                break;
+
+
+        }
     }
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
