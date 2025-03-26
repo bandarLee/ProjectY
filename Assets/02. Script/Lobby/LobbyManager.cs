@@ -76,7 +76,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     public void StartLoading()
     {
 
-        PhotonNetwork.LoadLevel("TH");
+        PhotonNetwork.LoadLevel("02Desert");
 
     }
 
