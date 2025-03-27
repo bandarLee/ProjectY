@@ -6,6 +6,7 @@ public class PlayerPhotonSigleton : MonoBehaviour
     public static PlayerPhotonSigleton Instance;
     public Transform cameraRoot;
     public PhotonView PhotonView;
+    public CinemachineCamera cCam;
 
     void Awake()
     {
@@ -27,9 +28,11 @@ public class PlayerPhotonSigleton : MonoBehaviour
     {
         if (PhotonView.IsMine)
         {
-            CinemachineCamera vCam = FindObjectOfType<CinemachineCamera>();
-            if (vCam != null)
+            cCam = FindObjectOfType<CinemachineCamera>();
+            if (cCam != null)
             {
+                cCam.Follow = cameraRoot;
+
             }
             else
             {

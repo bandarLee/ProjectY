@@ -1134,7 +1134,7 @@ GameObject:
   - component: {fileID: -1708225338521699270}
   m_Layer: 0
   m_Name: PicoChan
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1154,7 +1154,6 @@ Transform:
   m_Children:
   - {fileID: 9109010997807078510}
   - {fileID: 7694221170731127771}
-  - {fileID: 7280113515219755435}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 53.645, z: 0}
 --- !u!95 &3192002976570148230
@@ -1248,6 +1247,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cameraRoot: {fileID: 7694221170731127771}
   PhotonView: {fileID: -1708225338521699270}
+  cCam: {fileID: 0}
 --- !u!114 &2960663672368691845
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10741,73 +10741,3 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.03317081, y: 0.11927533, z: 0.086852305}
     m_Extent: {x: 0.029805884, y: 0.052799523, z: 0.014970936}
   m_DirtyAABB: 0
---- !u!1001 &1617817770512641133
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 3787525330950819731}
-    m_Modifications:
-    - target: {fileID: 996438920902299797, guid: bb07caf2dd6f87d4e8c80a9031931695, type: 3}
-      propertyPath: Target.LookAtTarget
-      value: 
-      objectReference: {fileID: 7694221170731127771}
-    - target: {fileID: 996438920902299797, guid: bb07caf2dd6f87d4e8c80a9031931695, type: 3}
-      propertyPath: Target.TrackingTarget
-      value: 
-      objectReference: {fileID: 7694221170731127771}
-    - target: {fileID: 1777521942739981890, guid: bb07caf2dd6f87d4e8c80a9031931695, type: 3}
-      propertyPath: m_Name
-      value: PlayerFollowCamera
-      objectReference: {fileID: 0}
-    - target: {fileID: 8321398785390005702, guid: bb07caf2dd6f87d4e8c80a9031931695, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0.0009768009
-      objectReference: {fileID: 0}
-    - target: {fileID: 8321398785390005702, guid: bb07caf2dd6f87d4e8c80a9031931695, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 1.3459988
-      objectReference: {fileID: 0}
-    - target: {fileID: 8321398785390005702, guid: bb07caf2dd6f87d4e8c80a9031931695, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -6.044993
-      objectReference: {fileID: 0}
-    - target: {fileID: 8321398785390005702, guid: bb07caf2dd6f87d4e8c80a9031931695, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8321398785390005702, guid: bb07caf2dd6f87d4e8c80a9031931695, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8321398785390005702, guid: bb07caf2dd6f87d4e8c80a9031931695, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8321398785390005702, guid: bb07caf2dd6f87d4e8c80a9031931695, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8321398785390005702, guid: bb07caf2dd6f87d4e8c80a9031931695, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 15.022
-      objectReference: {fileID: 0}
-    - target: {fileID: 8321398785390005702, guid: bb07caf2dd6f87d4e8c80a9031931695, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8321398785390005702, guid: bb07caf2dd6f87d4e8c80a9031931695, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: bb07caf2dd6f87d4e8c80a9031931695, type: 3}
---- !u!4 &7280113515219755435 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8321398785390005702, guid: bb07caf2dd6f87d4e8c80a9031931695, type: 3}
-  m_PrefabInstance: {fileID: 1617817770512641133}
-  m_PrefabAsset: {fileID: 0}
