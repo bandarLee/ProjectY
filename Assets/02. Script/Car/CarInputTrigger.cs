@@ -4,14 +4,17 @@ public class CarInputTrigger : MonoBehaviour
 {
 
     public GameObject CarCameraRoot;
+    public Transform CarCameraRootTransform;
     void Start()
     {
         
     }
 
-    void Update()
+    void FixedUpdate()
     {
-        
+        Vector3 currentPos = CarCameraRoot.transform.position;
+        Vector3 targetPos = CarCameraRootTransform.position;
+        CarCameraRoot.transform.position = new Vector3(targetPos.x, currentPos.y, targetPos.z);
     }
     private void OnTriggerStay(Collider other)
     {
