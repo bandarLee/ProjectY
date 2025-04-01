@@ -38,7 +38,6 @@ public class PlayerAnimController : MonoBehaviour
         _animator.SetBool("IsWalk", isWalking);
         _animator.SetBool("IsRun", isRunning);
 
-        // 공격 입력 처리 (이전 코드와 동일)
         if (_input.Attack)
         {
             _animator.SetTrigger("IsSwordAttack");
@@ -48,7 +47,18 @@ public class PlayerAnimController : MonoBehaviour
 
     private void HandleJump()
     {
-        _animator.SetTrigger("IsJump");
+        // 수평 속도 계산 (y축 제외)
+        float speed = new Vector3(_controller.velocity.x, 0, _controller.velocity.z).magnitude;
+
+        // speed가 낮으면 Idle 상태로 판단
+        if (speed < 0.1f)
+        {
+            _animator.SetTrigger("IsIdleJump");
+        }
+        else
+        {
+            _animator.SetTrigger("IsJump");
+        }
     }
 
     public void OnAttackEnd()
