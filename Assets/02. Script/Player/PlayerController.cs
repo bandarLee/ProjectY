@@ -8,7 +8,7 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     [Header("Movement Settings")]
-    private float MoveSpeed; 
+    private float MoveSpeed;
     public float SprintSpeed = 15f;
     public float RotationSmoothTime = 0.12f;
     public float SpeedChangeRate = 10.0f;
@@ -39,12 +39,11 @@ public class PlayerController : MonoBehaviour
     [Tooltip("Vertical offset for the camera target (affects camera height)")]
     public float CameraHeightOffset = 2.0f;
 
-    // cinemachine
+    // cinemachine 회전 제어용 변수
     private float _cinemachineTargetYaw;
     private float _cinemachineTargetPitch;
 
     private const float _threshold = 0.01f;
-
 
     private float _speed;
     private float _verticalVelocity;
@@ -72,7 +71,7 @@ public class PlayerController : MonoBehaviour
 #if ENABLE_INPUT_SYSTEM
             return _playerInput.currentControlScheme == "KeyboardMouse";
 #else
-				return false;
+            return false;
 #endif
         }
     }
@@ -97,30 +96,29 @@ public class PlayerController : MonoBehaviour
         _jumpTimeoutDelta = JumpTimeout;
         _fallTimeoutDelta = FallTimeout;
 
-        // 초기 카메라 회전값 설정: 현재 카메라 대상의 회전값을 기준으로 함
+        // 초기 카메라 회전값 설정 (CinemachineCameraTarget의 현재 회전값 기준)
         _cinemachineTargetYaw = CinemachineCameraTarget.transform.eulerAngles.y;
         _cinemachineTargetPitch = CinemachineCameraTarget.transform.eulerAngles.x;
 
         // 초기 인풋 Look 값 초기화
         _input.Look = Vector2.zero;
     }
+
     private void LateUpdate()
     {
-        // 플레이어 위치에 높이 오프셋을 추가하여 카메라 대상 위치 업데이트
-        CinemachineCameraTarget.transform.position = transform.position + Vector3.up * CameraHeightOffset;
+        // 위치 제어는 Cinemachine이 담당하므로 코드는 회전만 업데이트
         CameraRotation();
     }
 
-
     private void Update()
     {
-        // PlayerStat의 속도 변경 사항을 반영
         MoveSpeed = PlayerStat.Instance.GetSpeed();
 
         GroundedCheck();
         JumpAndGravity();
         Move();
     }
+
     private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
     {
         if (lfAngle < -360f) lfAngle += 360f;
@@ -130,21 +128,17 @@ public class PlayerController : MonoBehaviour
 
     private void CameraRotation()
     {
-        // 인풋이 있고 카메라 고정이 해제된 경우에만 회전 적용
         if (_input.Look.sqrMagnitude >= _threshold && !LockCameraPosition)
         {
-            // 마우스 입력은 Time.deltaTime을 곱하지 않음
             float deltaTimeMultiplier = IsCurrentDeviceMouse ? 1.0f : Time.deltaTime;
-
             _cinemachineTargetYaw += _input.Look.x * deltaTimeMultiplier;
-            _cinemachineTargetPitch -= _input.Look.y * deltaTimeMultiplier; // 마우스 y입력을 반전시킴
+            _cinemachineTargetPitch -= _input.Look.y * deltaTimeMultiplier; // 마우스 y 입력 반전
         }
 
-        // 회전 값 제한
         _cinemachineTargetYaw = ClampAngle(_cinemachineTargetYaw, float.MinValue, float.MaxValue);
         _cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, BottomClamp, TopClamp);
 
-        // Cinemachine이 이 대상의 회전을 따르도록 설정
+        // 회전 값만 업데이트 – 위치는 인스펙터의 Cinemachine 설정에 의해 제어됨
         CinemachineCameraTarget.transform.rotation = Quaternion.Euler(_cinemachineTargetPitch + CameraAngleOverride,
             _cinemachineTargetYaw, 0.0f);
     }
@@ -153,7 +147,6 @@ public class PlayerController : MonoBehaviour
     {
         Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z);
         Grounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers, QueryTriggerInteraction.Ignore);
-
         if (!Grounded)
         {
             Grounded = _controller.isGrounded;
@@ -165,16 +158,13 @@ public class PlayerController : MonoBehaviour
         if (Grounded)
         {
             _fallTimeoutDelta = FallTimeout;
-
             if (_verticalVelocity < 0f)
             {
                 _verticalVelocity = -2f;
             }
-
             if (_input.Jump)
             {
                 _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
-                // 이벤트를 통해 점프를 알림
                 OnJumpTriggered?.Invoke();
                 _input.Jump = false;
             }
@@ -198,21 +188,58 @@ public class PlayerController : MonoBehaviour
             targetSpeed = 0f;
         }
 
+        // 현재 속도 계산
         float currentHorizontalSpeed = new Vector3(_controller.velocity.x, 0, _controller.velocity.z).magnitude;
         float inputMagnitude = _input.analogMovement ? _input.Move.magnitude : 1f;
-
         _speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed * inputMagnitude, Time.deltaTime * SpeedChangeRate);
         _speed = Mathf.Round(_speed * 1000f) / 1000f;
 
+        // 입력에 따른 이동 방향 계산
         if (_input.Move != Vector2.zero)
         {
-            Vector3 inputDirection = new Vector3(_input.Move.x, 0f, _input.Move.y).normalized;
-            _targetRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg + _mainCameraTransform.eulerAngles.y;
-            float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, _targetRotation, ref _rotationVelocity, RotationSmoothTime);
-            transform.rotation = Quaternion.Euler(0f, rotation, 0f);
-        }
+            // 만약 전진(또는 측면) 입력이거나 혼합 입력(전진+측면)인 경우
+            if (_input.Move.y >= 0)
+            {
+                // 카메라 기준 desiredRotation 계산
+                Vector3 inputDirection = new Vector3(_input.Move.x, 0f, _input.Move.y).normalized;
+                float desiredRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg + _mainCameraTransform.eulerAngles.y;
+                float angleDifference = Mathf.DeltaAngle(transform.eulerAngles.y, desiredRotation);
 
-        Vector3 targetDirection = Quaternion.Euler(0f, _targetRotation, 0f) * Vector3.forward;
-        _controller.Move(targetDirection * (_speed * Time.deltaTime) + new Vector3(0f, _verticalVelocity, 0f) * Time.deltaTime);
+                // 90도 이상 차이 나는 경우에는 회전을 업데이트하지 않음
+                if (Mathf.Abs(angleDifference) > 90f)
+                {
+                    _targetRotation = transform.eulerAngles.y;
+                }
+                else
+                {
+                    _targetRotation = desiredRotation;
+                }
+
+                float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, _targetRotation, ref _rotationVelocity, RotationSmoothTime);
+                transform.rotation = Quaternion.Euler(0f, rotation, 0f);
+
+                // 회전한 후의 이동 방향은 카메라 기준 _targetRotation을 사용
+                Vector3 targetDirection = Quaternion.Euler(0f, _targetRotation, 0f) * Vector3.forward;
+                _controller.Move(targetDirection * (_speed * Time.deltaTime) + new Vector3(0f, _verticalVelocity, 0f) * Time.deltaTime);
+            }
+            // 후진 입력인 경우 (즉, S 키 누름)
+            else
+            {
+                // 회전 업데이트 없이 현재 플레이어의 회전 기준으로 이동 방향 계산
+                // 후진은 -transform.forward, 측면은 transform.right의 영향을 받음
+                Vector3 backwardComponent = -transform.forward * Mathf.Abs(_input.Move.y);
+                Vector3 lateralComponent = transform.right * _input.Move.x;
+                Vector3 moveDir = (backwardComponent + lateralComponent).normalized;
+
+                // 회전은 그대로 유지한 채 이동만 진행
+                _controller.Move(moveDir * (_speed * Time.deltaTime) + new Vector3(0f, _verticalVelocity, 0f) * Time.deltaTime);
+            }
+        }
+        else
+        {
+            // 입력이 없으면 속도 0
+            _controller.Move(new Vector3(0f, _verticalVelocity, 0f) * Time.deltaTime);
+        }
     }
+
 }
