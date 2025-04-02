@@ -47,14 +47,15 @@ public class PlayerAnimController : MonoBehaviour
 
     private void HandleJump()
     {
-        // 수평 속도 계산 (y축 제외)
+        // 수평 속도 계산
         float speed = new Vector3(_controller.velocity.x, 0, _controller.velocity.z).magnitude;
 
-        // speed가 낮으면 Idle 상태로 판단
+        // speed가 낮으면 Idle 상태로 판단 -> IsIdleJump
         if (speed < 0.1f)
         {
             _animator.SetTrigger("IsIdleJump");
         }
+        // Walk,Run 상태 -> IsJump
         else
         {
             _animator.SetTrigger("IsJump");
