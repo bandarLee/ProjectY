@@ -4,10 +4,10 @@ using UnityEngine;
 public class DesertSceneManager : MonoBehaviour
 {
     public GameObject Player;
-    public Vector3 PlayerStartPosition;
+    public GameObject PlayerStartPosition;
     void Start()
     {
-        GameObject player = PhotonNetwork.Instantiate(Player.name, PlayerStartPosition, Quaternion.identity, 0);
+        GameObject player = PhotonNetwork.Instantiate(Player.name, PlayerStartPosition.transform.position, Quaternion.identity, 0);
 
     }
 
